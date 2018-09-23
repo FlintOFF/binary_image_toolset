@@ -36,11 +36,11 @@ class Frame < Minitest::Test
   end
 
   def test_crop
-    assert_equal @frame.crop(0, 3, 0, 3), [%w(* * *), %w(* - -), %w(- * -)]
+    assert_equal @frame.crop([0, 3, 0, 3]), [%w(* * *), %w(* - -), %w(- * -)]
   end
 
   def test_crop!
-    assert_equal @frame.crop!(0, 3, 0, 3), @frame.frame
+    assert_equal @frame.crop!([0, 3, 0, 3]), @frame.frame
   end
 
   def test_filter
@@ -54,11 +54,11 @@ class Frame < Minitest::Test
   def test_erase
     erase_result = @frame.frame
     erase_result[0] = %w(- - -)
-    assert_equal @frame.erase(0, 3, 0, 1), erase_result
+    assert_equal @frame.erase([0, 3, 0, 1]), erase_result
   end
 
   def test_erase!
-    assert_equal @frame.erase!(1, 1, 1, 1), @frame.frame
+    assert_equal @frame.erase!([1, 1, 1, 1]), @frame.frame
   end
 
   def test_create
@@ -72,11 +72,11 @@ class Frame < Minitest::Test
   def test_fill
     fill_result = @frame.frame
     fill_result[4] = %w(* * *)
-    assert_equal @frame.fill('*', 3, 1, 0, 3), fill_result
+    assert_equal @frame.fill('*', [3, 1, 0, 3]), fill_result
   end
 
   def test_fill!
-    assert_equal @frame.fill!('*', 3, 1, 0, 3), @frame.frame
+    assert_equal @frame.fill!('*', [3, 1, 0, 3]), @frame.frame
   end
 
   def test_find

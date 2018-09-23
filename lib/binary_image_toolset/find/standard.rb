@@ -4,8 +4,8 @@ module BinaryImageToolset
       def initialize(base_frame:, search_frame:, configs: {})
         @base_frame = base_frame
         @search_frame = search_frame
-        configs[:min_match] = 80 unless configs.has_key? :min_match
-        configs[:min_overlap] = 50 unless configs.has_key? :min_overlap
+        configs[:min_match] ||= 80
+        configs[:min_overlap] ||= 50
         configs[:debug] = false unless configs.has_key? :debug
         @configs = configs
       end
@@ -19,12 +19,12 @@ module BinaryImageToolset
       def handle
         out = []
         generate_compare_jobs.each do |compare_job|
-          base_sub_frame = @base_frame.crop(*compare_job[:base])
-          search_sub_frame = @search_frame.crop(*compare_job[:search])
+          base_sub_frame = @base_frame.crop(compare_job[:base])
+          search_sub_frame = @search_frame.crop(compare_job[:search])
           percent = compare(base_sub_frame, search_sub_frame)
           overlap_percent = overlap(@search_frame.frame, search_sub_frame)
-
-          if percent >= @configs[:min_match] && overlap_percent >= @configs[:min_overlap]
+          next unless overlap_percent >= @configs[:min_overlap]
+          if percent >= @configs[:min_match]
             h = { position: compare_job[:base], percent: percent, overlap_percent: overlap_percent }
             h[:debug] = compare_job[:debug] if @configs[:debug]
             out << h

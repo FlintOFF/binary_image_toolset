@@ -34,12 +34,12 @@ module BinaryImageToolset
       @frame
     end
 
-    def crop(x, x_length, y, y_length)
-      Matrix[*@frame].minor(x, x_length, y, y_length).to_a
+    def crop(coordinates)
+      Matrix[*@frame].minor(*coordinates).to_a
     end
 
-    def crop!(x, x_length, y, y_length)
-      @frame = crop(x, x_length, y, y_length)
+    def crop!(coordinates)
+      @frame = crop(coordinates)
       update
       @frame
     end
@@ -52,12 +52,12 @@ module BinaryImageToolset
       @frame = filter(filter_name, *filter_params)
     end
 
-    def erase(x, x_length, y, y_length)
-      fill(@background_symbol, x, x_length, y, y_length)
+    def erase(coordinates)
+      fill(@background_symbol, coordinates)
     end
 
-    def erase!(x, x_length, y, y_length)
-      @frame = erase(x, x_length, y, y_length)
+    def erase!(coordinates)
+      @frame = erase(coordinates)
     end
 
     def create(height, width)
@@ -73,10 +73,10 @@ module BinaryImageToolset
       @frame
     end
 
-    def fill(symbol, x, x_length, y, y_length)
+    def fill(symbol, coordinates)
       matrix_in = Matrix[*@frame]
       matrix_out = Matrix.build(@height, @width) do |row, column|
-        if row >= y && row < y + y_length && column >= x && column < x + x_length
+        if row >= coordinates[2] && row < coordinates[2] + coordinates[3] && column >= coordinates[0] && column < coordinates[0] + coordinates[1]
           symbol
         else
           matrix_in[row, column]
@@ -86,8 +86,8 @@ module BinaryImageToolset
       matrix_out.to_a
     end
 
-    def fill!(symbol, x, x_length, y, y_length)
-      @frame = fill(symbol, x, x_length, y, y_length)
+    def fill!(symbol, coordinates)
+      @frame = fill(symbol, coordinates)
     end
 
     def find(search_frame, finder_name, finder_params = {})
