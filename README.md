@@ -1,9 +1,13 @@
 # BinaryImageToolset
 [![Maintainability](https://api.codeclimate.com/v1/badges/47c89e40d6a9d319ac84/maintainability)](https://codeclimate.com/github/FlintOFF/binary_image_toolset/maintainability)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/binary_image_toolset`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Welcome friend. This toolset gives you simple commands for work with binary images. The main features is:
+- **find** frame position on frame
+- **crop** frame
+- **filter** frame using minor filter
+- **fill** part of frame
+- **erase** part of frame
+- **create** frame
 
 ## Installation
 
@@ -23,7 +27,31 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+base_array = [%w(* * *), %w(* - -), %w(- * -), %w(- - *), %w(- - -)]
+find_array = [%w(* * *)]
+base_frame = BinaryImageToolset::Frame.new(base_array)
+find_frame = BinaryImageToolset::Frame.new(find_array)
+base_frame.find(find_frame, :standard)    
+```
+this part of code will return next responce
+```ruby
+[
+  { position: [0, 1, 0, 2], percent: 100, overlap_percent: 67 },
+  { position: [0, 1, 0, 3], percent: 100, overlap_percent: 100 },
+  { position: [0, 1, 1, 2], percent: 100, overlap_percent: 67 }
+]
+```
+
+The parameter `position` have format `[x_start, x_length, y_start, y_length]`
+ 
+You can set next configs:
+* `min_match` - percent of the minimum match
+* `min_overlap` - percentage to search by part of the frame
+
+```ruby
+base_frame.find(find_frame, :standard, { min_match: 100, min_overlap: 100 })
+```
 
 ## Development
 
